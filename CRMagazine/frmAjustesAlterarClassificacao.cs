@@ -92,8 +92,13 @@ namespace CRMagazine
                         consulta.InsereHistorico(txtOS.Text, lblUsuario.Text, StatusHistorico, consulta.dataNormal, consulta.hora);
                         //=====fim da inserção======================================
 
-                        if ((txtVarejista.Text.Contains("MAGAZINE") || txtVarejista.Text.Contains("B2W") || txtVarejista.Text.Contains("SHOPLOKO") || txtVarejista.Text.Contains("LOJAS CEM"))
-                            && chbNaoImprimir.Checked == false)
+                        if ((
+                            txtVarejista.Text.Contains("MAGAZINE") 
+                            || txtVarejista.Text.Contains("B2W") 
+                            || txtVarejista.Text.Contains("SHOPLOKO") 
+                            || txtVarejista.Text.Contains("LOJAS CEM")
+                            || txtVarejista.Text.Contains("COMPROU 123")
+                            ) && chbNaoImprimir.Checked == false)
                         {
                             ImprimirSaldoMagazine(cbxClassificacao.Text);
                         }

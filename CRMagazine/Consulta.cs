@@ -167,6 +167,32 @@ namespace CRMagazine
 
         public string ErroAssist = "";
 
+        public string Prevent(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return "";
+            }
+            else
+            {
+                return input.Replace("'", "`");
+            }
+        }
+
+        public string ComandPrevent(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return "";
+            }
+            else
+            {
+                input = input.Replace("--", " ");
+                input = input.Replace("/*", " ");
+                return input;
+            }
+        }
+
         public void ConsultaTudo()
         {
             try
@@ -283,7 +309,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta CHAMADOS 'TUDO': \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public string Codigo_pre = "";
@@ -319,7 +348,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AO CONSULTAR PRE ENTRADA: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void ConsultarNFEntradaPorPedido(string pedido)
@@ -401,7 +433,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AO CONSULTAR NF DE ENTRADA: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -410,13 +445,14 @@ namespace CRMagazine
         public string NF_Descricao_Saida = "";
         public string NF_Codigo_Saida = "";
         public string NF_EAN_Saida = "";
-        public void ConsultaNotaFiscalSaida(string Varejista, string Coluna, string Valor, string NF)
+        public string NF_Qnt_somada = "";
+        public void ConsultaNotaFiscalSaida_old(string Varejista, string Coluna, string Valor, string NF)
         {
             try
             {
                 Retorno = "";
                 string sql = "";
-                sql += " Select * from ConfereNFSaida ";
+                sql += " Select *, sum(Conferir) as qntSomada from ConfereNFSaida ";
                 sql += " where NotaFiscal in (" + NF + ") and Varejista = '" + Varejista + "' and " + Coluna + " = '" + Valor + "' ";
                 cx.Conectar();
                 SqlCommand cd = new SqlCommand();
@@ -431,6 +467,7 @@ namespace CRMagazine
                     NF_Descricao_Saida = dr["Descricao"].ToString();
                     NF_Codigo_Saida = dr["CodVarejo"].ToString();
                     NF_EAN_Saida = dr["EAN"].ToString();
+                    NF_Qnt_somada = dr["qntSomada"].ToString();
                 }
                 else
                 {
@@ -440,6 +477,7 @@ namespace CRMagazine
                     NF_Descricao_Saida = "";
                     NF_Codigo_Saida = "";
                     NF_EAN_Saida = "";
+                    NF_Qnt_somada = "";
                 }
                 dr.Close();
             }
@@ -447,8 +485,79 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AO CONSULTAR NF DE SAIDA: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }            
         }
+
+        public void ConsultaNotaFiscalSaida(string Varejista, string Coluna, string Valor, string NF)
+        {
+            try
+            {
+                Retorno = "";
+
+                string sql = $@"
+                SELECT TOP 1 *,
+                       (
+                           SELECT COALESCE(SUM(
+                               CASE 
+                                   WHEN ISNUMERIC(Conferir) = 1 THEN CONVERT(INT, Conferir) 
+                                   ELSE 0 
+                               END
+                           ), 0)
+                           FROM ConfereNFSaida
+                           WHERE NotaFiscal IN ({NF})
+                             AND Varejista = @Varejista
+                             AND {Coluna} = @Valor
+                       ) AS qntSomada
+                FROM ConfereNFSaida
+                WHERE NotaFiscal IN ({NF})
+                  AND Varejista = @Varejista
+                  AND {Coluna} = @Valor";
+
+                cx.Conectar();
+
+                using (SqlCommand cd = new SqlCommand(sql, cx.c))
+                {
+                    cd.Parameters.AddWithValue("@Varejista", Varejista);
+                    cd.Parameters.AddWithValue("@Valor", Valor);
+
+                    using (SqlDataReader dr = cd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            Retorno = "ok";
+                            NF_NotaFiscal_Saida = dr["NotaFiscal"].ToString();
+                            NF_Data_Saida = dr["Data"].ToString();
+                            NF_Descricao_Saida = dr["Descricao"].ToString();
+                            NF_Codigo_Saida = dr["CodVarejo"].ToString();
+                            NF_EAN_Saida = dr["EAN"].ToString();
+                            NF_Qnt_somada = dr["qntSomada"].ToString();
+                        }
+                        else
+                        {
+                            Retorno = "falha";
+                            NF_NotaFiscal_Saida = "";
+                            NF_Data_Saida = "";
+                            NF_Descricao_Saida = "";
+                            NF_Codigo_Saida = "";
+                            NF_EAN_Saida = "";
+                            NF_Qnt_somada = "";
+                        }
+                    }
+                }
+            }
+            catch (SqlException x)
+            {
+                MessageBox.Show("FALHA AO CONSULTAR NF DE SAÍDA: \n" + x.Message);
+            }
+            finally
+            {
+                cx.Desconectar();
+            }
+        }
+
 
         public void ListarVarejistas(ComboBox comboBox)
         {
@@ -520,7 +629,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AO CONSULTAR CODVAREJO: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -570,7 +682,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AO CONSULTAR CODVAREJO: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }            
         }
 
 
@@ -601,7 +716,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA CALCULAR DATAS:\r\n" + x.Message);
             }
-            cx.Desconectar();            
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void consultarTecnica()
@@ -665,7 +783,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta USUARIOS: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void consultarUsuario()
@@ -724,7 +845,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta USUARIOS: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void ConsultarNSEQUISAP()
@@ -775,7 +899,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA EM CONSULTA EQUI SAP: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
 
         }
 
@@ -813,7 +940,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta USUARIOS: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
         
 
@@ -866,7 +996,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR NO BANCO CHAMADOS: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public string OSoutros = "";
@@ -927,7 +1060,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR NO BANCO CHAMADOS USANDO OUTROS VAREJISTAS: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();           
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -964,7 +1100,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR NO BANCO CHAMADOS: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1004,7 +1143,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA AOU CONSULTAR HORA DO SERVIDOR:\r\n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
             DateTime agora = Convert.ToDateTime(datainteira);
             data = agora.ToString("MM/dd/yyyy");
             dataInvertida = agora.ToString("yyyy/MM/dd");
@@ -1024,7 +1166,7 @@ namespace CRMagazine
             {
                 Retorno = "";
                 string sql = "";
-                sql = comando;
+                sql = ComandPrevent(comando);
                 cx.Conectar();
                 SqlCommand cd = new SqlCommand();
                 cd.Connection = cx.c;
@@ -1035,7 +1177,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em consultar Historico: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1063,7 +1208,7 @@ namespace CRMagazine
             //string Historico = txtHistorico.Text + " | REPARO: " + data;
             try
             {
-                sql += comando;
+                sql += ComandPrevent(comando);
                 cx.Conectar();
                 SqlCommand cd = new SqlCommand();
                 cd.Connection = cx.c;
@@ -1094,7 +1239,7 @@ namespace CRMagazine
             //string Historico = txtHistorico.Text + " | REPARO: " + data;
             try
             {
-                sql += comando;
+                sql += ComandPrevent(comando);
                 cx.ConectarSP();
                 SqlCommand cd = new SqlCommand();
                 cd.Connection = cx.c;
@@ -1107,7 +1252,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO ATUALIZAR: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void InsereHistorico(string OS, string Usuario, string Status, string Data, string Hora)
@@ -1130,7 +1278,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR EM HISTORICO: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1160,7 +1311,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Erro: " + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void consultarSimNao()
@@ -1169,7 +1323,7 @@ namespace CRMagazine
             {
                 Retorno = "";
                 string sql = "";
-                sql += comando;
+                sql += ComandPrevent(comando);
                 cx.Conectar();
                 SqlCommand cd = new SqlCommand();
                 cd.Connection = cx.c;
@@ -1191,7 +1345,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em consultarSimNao: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void consultarImpressao()
@@ -1240,7 +1397,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta EXPEDICAO: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public string CodPeca = "";
@@ -1256,7 +1416,7 @@ namespace CRMagazine
                 Retorno = "";
                 string sql = "";
                 //Exemplo sql += " Select * from Precos where CodPeca = '" + ConsultarChamado + "'";
-                sql = comando;
+                sql = ComandPrevent(comando);
                 cx.Conectar();
                 SqlCommand cd = new SqlCommand();
                 cd.Connection = cx.c;
@@ -1288,7 +1448,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta pelo Chamado: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1312,7 +1475,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR PREÇOS: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1342,7 +1508,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Contar ESTOQUE: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void ContarEmPedidos()
@@ -1370,7 +1539,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em ContarEmPedidos: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1419,7 +1591,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta ESTOQUE: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1445,7 +1620,10 @@ namespace CRMagazine
                 MessageBox.Show("ERRO AO INSERIR EM CLIENTES: \n" + x.Message);
                 Retorno = "falha";
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public string idClientes = "";
@@ -1501,7 +1679,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta CLIENTES: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1533,7 +1714,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Contar ESTOQUE: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void ContarEmPedidosSP()
@@ -1561,7 +1745,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em ContarEmPedidos: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
 
@@ -1590,7 +1777,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em ContarEmPedidos: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void consultarEstoqueSP()
@@ -1638,7 +1828,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta ESTOQUE: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public string TIPO_ESPC = "";
@@ -1695,7 +1888,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("FALHA EM CONSULTA CODIGO SAP: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
 
         }
 
@@ -1734,7 +1930,10 @@ namespace CRMagazine
             {
                 MessageBox.Show("Falha em Consulta pelo Chamado: \n" + x.Message);
             }
-            cx.Desconectar();
+            finally
+            {
+                cx.Desconectar();
+            }
         }
 
         public void LimparControles(Control parent)
@@ -1766,7 +1965,11 @@ namespace CRMagazine
 
                 if (cont is ComboBox) 
                 {
-                    if ((cont as ComboBox).Name != "cboVarejista" && (cont as ComboBox).Name != "cboUsuario" && (cont as ComboBox).Name != "cboNotaFiscal")
+                    if (
+                        (cont as ComboBox).Name != "cboVarejista" 
+                        && (cont as ComboBox).Name != "cboUsuario" 
+                        && (cont as ComboBox).Name != "cboNotaFiscal"                         
+                        )
                     {
                         (cont as ComboBox).Text = "";
                     }                    
@@ -1781,7 +1984,15 @@ namespace CRMagazine
                     (cont as RadioButton).Checked = false;
                 }
 
-                if ((cont is CheckBox) && (cont as CheckBox).Name != "chbSelecionarImpressora" && (cont as CheckBox).Name != "chbNaoImprimir" && (cont as CheckBox).Name != "chbSemConexao" && (cont as CheckBox).Name != "chbSemZebra" && (cont as CheckBox).Name != "chbIrParaReparo" && (cont as CheckBox).Name != "chbSemA1" && (cont as CheckBox).Name != "chbConfigImpressora")
+                if ((cont is CheckBox) && (cont as CheckBox).Name != "chbSelecionarImpressora" 
+                    && (cont as CheckBox).Name != "chbNaoImprimir" 
+                    && (cont as CheckBox).Name != "chbSemConexao" 
+                    && (cont as CheckBox).Name != "chbSemZebra" 
+                    && (cont as CheckBox).Name != "chbIrParaReparo" 
+                    && (cont as CheckBox).Name != "chbSemA1" 
+                    && (cont as CheckBox).Name != "chbConfigImpressora" 
+                    && (cont as CheckBox).Name != "chbBuscaPorSKU_entrada"
+                    )
                 { 
                     (cont as CheckBox).Checked = false;
                 }

@@ -81,6 +81,12 @@ namespace CRMagazine
             this.cboVarejista = new System.Windows.Forms.ComboBox();
             this.cboNotaFiscal = new System.Windows.Forms.ComboBox();
             this.lnkAtualizar = new System.Windows.Forms.LinkLabel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtSomaDasQuantidades = new System.Windows.Forms.TextBox();
+            this.txtQtd = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.pnlMultiplasQuantidades = new System.Windows.Forms.Panel();
+            this.chbMultiplaQuantidade = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -90,6 +96,7 @@ namespace CRMagazine
             this.panel5.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConsulta)).BeginInit();
+            this.pnlMultiplasQuantidades.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel8
@@ -183,7 +190,7 @@ namespace CRMagazine
             // 
             this.panel9.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panel9.Controls.Add(this.lblUltimoColetado);
-            this.panel9.Location = new System.Drawing.Point(497, 474);
+            this.panel9.Location = new System.Drawing.Point(497, 510);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(413, 64);
             this.panel9.TabIndex = 564;
@@ -242,14 +249,14 @@ namespace CRMagazine
             this.panel4.Controls.Add(this.label7);
             this.panel4.Location = new System.Drawing.Point(497, 255);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(413, 129);
+            this.panel4.Size = new System.Drawing.Size(413, 99);
             this.panel4.TabIndex = 565;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(169, 68);
+            this.label6.Location = new System.Drawing.Point(169, 55);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 565;
@@ -260,7 +267,7 @@ namespace CRMagazine
             this.txtEanConsulta.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtEanConsulta.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtEanConsulta.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEanConsulta.Location = new System.Drawing.Point(172, 81);
+            this.txtEanConsulta.Location = new System.Drawing.Point(172, 68);
             this.txtEanConsulta.Name = "txtEanConsulta";
             this.txtEanConsulta.ReadOnly = true;
             this.txtEanConsulta.Size = new System.Drawing.Size(230, 24);
@@ -271,7 +278,7 @@ namespace CRMagazine
             this.txtDescricao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDescricao.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtDescricao.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescricao.Location = new System.Drawing.Point(10, 30);
+            this.txtDescricao.Location = new System.Drawing.Point(10, 21);
             this.txtDescricao.Name = "txtDescricao";
             this.txtDescricao.ReadOnly = true;
             this.txtDescricao.Size = new System.Drawing.Size(392, 24);
@@ -281,7 +288,7 @@ namespace CRMagazine
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(7, 68);
+            this.label3.Location = new System.Drawing.Point(7, 55);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 563;
@@ -292,7 +299,7 @@ namespace CRMagazine
             this.txtCodigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCodigo.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtCodigo.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCodigo.Location = new System.Drawing.Point(10, 81);
+            this.txtCodigo.Location = new System.Drawing.Point(10, 68);
             this.txtCodigo.Name = "txtCodigo";
             this.txtCodigo.ReadOnly = true;
             this.txtCodigo.Size = new System.Drawing.Size(156, 24);
@@ -302,7 +309,7 @@ namespace CRMagazine
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(7, 17);
+            this.label7.Location = new System.Drawing.Point(7, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(69, 13);
             this.label7.TabIndex = 559;
@@ -313,7 +320,7 @@ namespace CRMagazine
             this.panel7.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panel7.Controls.Add(this.btnLimpar);
             this.panel7.Controls.Add(this.btnConcluir);
-            this.panel7.Location = new System.Drawing.Point(497, 402);
+            this.panel7.Location = new System.Drawing.Point(497, 438);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(413, 64);
             this.panel7.TabIndex = 563;
@@ -657,11 +664,79 @@ namespace CRMagazine
             this.lnkAtualizar.Text = "Atualizar";
             this.lnkAtualizar.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAtualizar_LinkClicked);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(8, 2);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(104, 13);
+            this.label8.TabIndex = 567;
+            this.label8.Text = "SOMA DAS QNTDS";
+            // 
+            // txtSomaDasQuantidades
+            // 
+            this.txtSomaDasQuantidades.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtSomaDasQuantidades.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtSomaDasQuantidades.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSomaDasQuantidades.Location = new System.Drawing.Point(10, 16);
+            this.txtSomaDasQuantidades.Name = "txtSomaDasQuantidades";
+            this.txtSomaDasQuantidades.ReadOnly = true;
+            this.txtSomaDasQuantidades.Size = new System.Drawing.Size(114, 24);
+            this.txtSomaDasQuantidades.TabIndex = 566;
+            // 
+            // txtQtd
+            // 
+            this.txtQtd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtQtd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtQtd.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtQtd.Location = new System.Drawing.Point(296, 16);
+            this.txtQtd.Name = "txtQtd";
+            this.txtQtd.Size = new System.Drawing.Size(106, 24);
+            this.txtQtd.TabIndex = 568;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(150, 22);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(140, 13);
+            this.label9.TabIndex = 569;
+            this.label9.Text = "INFORME A QUANTIDADE";
+            // 
+            // pnlMultiplasQuantidades
+            // 
+            this.pnlMultiplasQuantidades.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.pnlMultiplasQuantidades.Controls.Add(this.label9);
+            this.pnlMultiplasQuantidades.Controls.Add(this.txtSomaDasQuantidades);
+            this.pnlMultiplasQuantidades.Controls.Add(this.txtQtd);
+            this.pnlMultiplasQuantidades.Controls.Add(this.label8);
+            this.pnlMultiplasQuantidades.Location = new System.Drawing.Point(497, 384);
+            this.pnlMultiplasQuantidades.Name = "pnlMultiplasQuantidades";
+            this.pnlMultiplasQuantidades.Size = new System.Drawing.Size(413, 47);
+            this.pnlMultiplasQuantidades.TabIndex = 571;
+            this.pnlMultiplasQuantidades.Visible = false;
+            // 
+            // chbMultiplaQuantidade
+            // 
+            this.chbMultiplaQuantidade.AutoSize = true;
+            this.chbMultiplaQuantidade.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbMultiplaQuantidade.Location = new System.Drawing.Point(497, 362);
+            this.chbMultiplaQuantidade.Name = "chbMultiplaQuantidade";
+            this.chbMultiplaQuantidade.Size = new System.Drawing.Size(148, 16);
+            this.chbMultiplaQuantidade.TabIndex = 576;
+            this.chbMultiplaQuantidade.Text = "MULTIPLAS QUANTIDADES";
+            this.chbMultiplaQuantidade.UseVisualStyleBackColor = true;
+            this.chbMultiplaQuantidade.CheckedChanged += new System.EventHandler(this.chbMultiplaQuantidade_CheckedChanged);
+            // 
             // frmConferenciaSaida
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1052, 650);
+            this.Controls.Add(this.chbMultiplaQuantidade);
+            this.Controls.Add(this.pnlMultiplasQuantidades);
             this.Controls.Add(this.lnkAtualizar);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel9);
@@ -696,6 +771,8 @@ namespace CRMagazine
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConsulta)).EndInit();
+            this.pnlMultiplasQuantidades.ResumeLayout(false);
+            this.pnlMultiplasQuantidades.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -754,5 +831,11 @@ namespace CRMagazine
         private System.Windows.Forms.ComboBox cboVarejista;
         private System.Windows.Forms.ComboBox cboNotaFiscal;
         private System.Windows.Forms.LinkLabel lnkAtualizar;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtSomaDasQuantidades;
+        private System.Windows.Forms.TextBox txtQtd;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Panel pnlMultiplasQuantidades;
+        private System.Windows.Forms.CheckBox chbMultiplaQuantidade;
     }
 }

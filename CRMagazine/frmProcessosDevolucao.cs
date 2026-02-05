@@ -119,7 +119,12 @@ namespace CRMagazine
                         //=====fim da inserção======================================
 
 
-                        if (txtVarejista.Text.Contains("MAGAZINE") || txtVarejista.Text.Contains("B2W") || txtVarejista.Text.Contains("SHOPLOKO") || txtVarejista.Text.Contains("LOJAS CEM"))
+                        if (txtVarejista.Text.Contains("MAGAZINE") 
+                            || txtVarejista.Text.Contains("B2W") 
+                            || txtVarejista.Text.Contains("SHOPLOKO") 
+                            || txtVarejista.Text.Contains("LOJAS CEM")
+                            || txtVarejista.Text.Contains("COMPROU 123")
+                            )
                         {
                             ImprimirSaldoMagazine(Classificacao);
                         }

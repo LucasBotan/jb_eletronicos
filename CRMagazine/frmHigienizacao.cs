@@ -168,8 +168,13 @@ namespace CRMagazine
                     {
                         Imprimir();
 
-                        if ((txtVarejista.Text.Contains("MAGAZINE") || txtVarejista.Text.Contains("B2W") || txtVarejista.Text.Contains("SHOPLOKO") || txtVarejista.Text.Contains("LOJAS CEM"))
-                            && txtClassificacao.Text == "SALDO")
+                        if ((
+                            txtVarejista.Text.Contains("MAGAZINE") 
+                            || txtVarejista.Text.Contains("B2W") 
+                            || txtVarejista.Text.Contains("SHOPLOKO") 
+                            || txtVarejista.Text.Contains("LOJAS CEM")
+                            || txtVarejista.Text.Contains("COMPROU 123")
+                            ) && txtClassificacao.Text == "SALDO")
                         {
                             ImprimirSaldoMagazine();
                         }
@@ -736,8 +741,13 @@ namespace CRMagazine
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             Imprimir();
-            if ((txtVarejista.Text.Contains("MAGAZINE") || txtVarejista.Text.Contains("B2W") || txtVarejista.Text.Contains("SHOPLOKO") || txtVarejista.Text.Contains("LOJAS CEM"))
-                && txtClassificacao.Text == "SALDO")
+            if ((
+                txtVarejista.Text.Contains("MAGAZINE") 
+                || txtVarejista.Text.Contains("B2W") 
+                || txtVarejista.Text.Contains("SHOPLOKO") 
+                || txtVarejista.Text.Contains("LOJAS CEM")
+                || txtVarejista.Text.Contains("COMPROU 123")
+                ) && txtClassificacao.Text == "SALDO")
             {
                 //txtCodVarejo.Text = "123435";
                 //consulta.Filial = "DQS222";

@@ -117,6 +117,7 @@ namespace CRMagazine
                     txtDescricao.Text = consulta.NF_Descricao_Saida;
                     txtCodigo.Text = consulta.NF_Codigo_Saida;
                     txtEanConsulta.Text = consulta.NF_EAN_Saida;
+                    txtSomaDasQuantidades.Text = consulta.NF_Qnt_somada;
                     //btnConcluir.Select();
                     //AKI
                     consulta.comando = "";
@@ -189,6 +190,7 @@ namespace CRMagazine
                     txtDescricao.Text = consulta.NF_Descricao_Saida;
                     txtCodigo.Text = consulta.NF_Codigo_Saida;
                     txtEanConsulta.Text = consulta.NF_EAN_Saida;
+                    txtSomaDasQuantidades.Text = consulta.NF_Qnt_somada;
                     //btnConcluir.Select();
                     //AKI
                     consulta.comando = "";
@@ -354,6 +356,8 @@ namespace CRMagazine
             txtDescricao.Text = "";
             txtCodigo.Text = "";
             txtEanConsulta.Text = "";
+            txtQtd.Text = "";
+            txtSomaDasQuantidades.Text = "";
             btnConcluir.Visible = false;
         }
 
@@ -395,7 +399,35 @@ namespace CRMagazine
 
         private void btnConcluir_Click(object sender, EventArgs e)
         {
-            Concluir();
+            if(chbMultiplaQuantidade.Checked == false)
+            {
+                Concluir();
+            }
+            else
+            {
+                if (!int.TryParse(txtQtd.Text, out int qtdInformada))
+                {
+                    MessageBox.Show("Informe uma quantidade válida.");
+                    txtQtd.Select();
+                    txtQtd.SelectAll();
+                    return;
+                }
+
+                if (!int.TryParse(txtSomaDasQuantidades.Text, out int somaQuantidades))
+                {
+                    MessageBox.Show("A soma das quantidades é inválida.");
+                    return;
+                }
+
+                if (qtdInformada > somaQuantidades)
+                {
+                    MessageBox.Show("A quantidade informada é maior que a soma das quantidades disponíveis.");
+                    return;
+                }
+
+                ConcluirEmMassa();
+            }
+            
         }
 
         public void Concluir()
@@ -411,6 +443,130 @@ namespace CRMagazine
             AtualizaContadores();
             ListarTudo(false);
             txtEAN.Select();
+        }
+
+        public void ConcluirEmMassa()
+        {
+            if (!int.TryParse(txtQtd.Text, out int qtdRestante) || qtdRestante <= 0)
+            {
+                consulta.PlayFail();
+                MessageBox.Show("Informe uma quantidade válida para debitar.");
+                txtQtd.Select();
+                txtQtd.SelectAll();
+                return;
+            }
+
+            string codigo = txtCodigo.Text;
+            string varejista = cboVarejista.Text;
+
+            SqlTransaction transacao = null;
+            bool sucesso = false;            
+
+            try
+            {
+                // 🔹 1️⃣ Abre conexão e inicia transação
+                cx.Conectar();
+                transacao = cx.c.BeginTransaction();
+
+                SqlConnection conexao = cx.c;
+
+                while (qtdRestante > 0)
+                {
+                    // 🔹 2️⃣ Busca próxima linha com saldo (usando sua função auxiliar)
+                    if (!ConsultarProximaLinha(codigo, varejista, notas, conexao, transacao, out int id, out int conferirAtual))
+                        break; // acabou o saldo
+
+                    int debitar = Math.Min(qtdRestante, conferirAtual);
+
+                    // 🔹 3️⃣ Executa o UPDATE dentro da transação
+                    string sqlUpdate = @"
+                UPDATE ConfereNFSaida 
+                SET Conferir = Conferir - @Debitar 
+                WHERE idConfereNFSaida = @Id";
+
+                    using (SqlCommand cmdUpdate = new SqlCommand(sqlUpdate, conexao, transacao))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@Debitar", debitar);
+                        cmdUpdate.Parameters.AddWithValue("@Id", id);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+
+                    qtdRestante -= debitar;
+                }
+
+                // 🔹 4️⃣ Se tudo ocorreu bem, decide entre commit e aviso
+                if (qtdRestante > 0)
+                {
+                    transacao.Rollback();
+                    consulta.PlayFail();
+                    MessageBox.Show($"Nem todas as unidades puderam ser debitadas. Faltaram {qtdRestante} para zerar o saldo.");
+                }
+                else
+                {
+                    transacao.Commit();                    
+                    consulta.PlayOK();
+                    MessageBox.Show("Débito realizado com sucesso!");
+                    sucesso = true;
+                }
+                                
+            }
+            catch (Exception ex)
+            {
+                // ❌ Se algo der errado, desfaz tudo
+                try { transacao?.Rollback(); } catch { }
+                consulta.PlayFail();
+                MessageBox.Show("Erro ao debitar quantidades:\n" + ex.Message);
+            }
+            finally
+            {
+                cx.Desconectar();
+            }
+
+            if (sucesso)
+            {
+                // 🔹 5️⃣ Atualiza a interface
+                AdcionarContador();
+                lblUltimoColetado.Text = "ÚLTIMO: " + txtCodigo.Text + " - " + txtEanConsulta.Text + "\r\n" + txtDescricao.Text;
+                btnLimpar.PerformClick();
+                AtualizaContadores();
+                ListarTudo(false);
+                txtEAN.Select();
+            }
+        }
+
+        public bool ConsultarProximaLinha(string codigo, string varejista, string notas, SqlConnection conexao, SqlTransaction transacao, out int id, out int conferir)
+        {
+            id = 0;
+            conferir = 0;
+
+            try
+            {
+                string sql = $@"
+            SELECT TOP 1 idConfereNFSaida, Conferir
+            FROM ConfereNFSaida
+            WHERE CodVarejo = '{codigo}'
+              AND Varejista = '{varejista}'
+              AND Conferir > 0
+              AND NotaFiscal IN ({notas})
+            ORDER BY idConfereNFSaida";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conexao, transacao))
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        id = Convert.ToInt32(dr["idConfereNFSaida"]);
+                        conferir = Convert.ToInt32(dr["Conferir"]);
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException x)
+            {
+                MessageBox.Show("Falha em ConsultarProximaLinha:\n" + x.Message);
+            }
+
+            return false;
         }
 
         private void btbAdd_Click(object sender, EventArgs e)
@@ -615,6 +771,20 @@ namespace CRMagazine
         private void txtContagem_TextChanged(object sender, EventArgs e)
         {
             lblContagem.Text = txtContagem.Lines.Length.ToString();
+        }
+
+        private void chbMultiplaQuantidade_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbMultiplaQuantidade.Checked)
+            {
+                pnlMultiplasQuantidades.Visible = true;
+            }
+            else
+            {
+                pnlMultiplasQuantidades.Visible = false;
+                txtSomaDasQuantidades.Text = "";
+                txtQtd.Text = "";
+            }
         }
     }
 }

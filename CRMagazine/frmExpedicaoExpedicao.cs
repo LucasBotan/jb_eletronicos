@@ -152,6 +152,8 @@ namespace CRMagazine
                     {
                         BaixarQntNF();
                         // ========================= ATUALIZA BANCO CHAMADOS ============================
+
+                        string OS = consulta.Prevent(txtOS.Text);
                         string pendente = "PENDENTE";
                         if (txtNF.Text == "0")
                         {
@@ -159,7 +161,7 @@ namespace CRMagazine
                             pendente = "SEM NOTA";
                         }
                         //consulta.comando = "update Chamados Set Status = 'FINALIZADO', Classificacao = 'DEVOLUCAO', MotivoDevolucao = 'DEVOLUÇÃO EXIGIDA', DataSaida = '" + consulta.data + "', NotaFiscal = '" + NF + "', NotaFiscalSaida = '" + pendente + "' where Status = 'EXPEDICAO' and OS = '" + txtOS.Text + "'";
-                        consulta.comando = "update Chamados Set Status = 'FINALIZADO', DataSaida = '" + consulta.data + "', NotaFiscal = '" + NF + "', NotaFiscalSaida = '" + pendente + "' where Status = 'EXPEDICAO' and OS = '" + txtOS.Text + "'";
+                        consulta.comando = $"update Chamados Set Status = 'FINALIZADO', DataSaida = '{consulta.data}', NotaFiscal = '{NF}', NotaFiscalSaida = '{pendente}' where Status = 'EXPEDICAO' and OS = '{OS}'";
                         consulta.Atualizar();
                         // ==============================================================================
                         if (consulta.Retorno == "ok")
@@ -167,10 +169,10 @@ namespace CRMagazine
                             //======Insere na tabela Historico==========================
                             string StatusHistorico = "EXPEDIDO";
                             consulta.DataAtual();
-                            consulta.InsereHistorico(txtOS.Text, lblUsuario.Text, StatusHistorico, consulta.dataNormal, consulta.hora);
+                            consulta.InsereHistorico(OS, lblUsuario.Text, StatusHistorico, consulta.dataNormal, consulta.hora);
                             //=====fim da inserção======================================
 
-                            lstContagem.Items.Add(txtOS.Text);
+                            lstContagem.Items.Add(OS);
                             int rows = lstContagem.Items.Count;
                             lblContagem.Text = rows.ToString();
 
@@ -228,8 +230,10 @@ namespace CRMagazine
         // PUXAR A NOTA FISCAL MAIS ANTIGA QUE CONTENHA O CODVAREJO E PRECISE SER BAIXADA A QUANTIDADE
         public void BuscarNF()
         {
-            consulta.comando = "";
-            consulta.comando = "select top(1) notafiscal as Quantidade from NotaFiscal where CodVarejo = '" + txtCodVarejo.Text + "' and QntRestante > 0 and Varejista = '" + txtVarejista.Text + "' order by CONVERT(date, Data, 103) ASC";
+            string codigo = consulta.Prevent(txtCodVarejo.Text);
+            string varejista = consulta.Prevent(txtVarejista.Text);
+
+            consulta.comando = $"select top(1) notafiscal as Quantidade from NotaFiscal where CodVarejo = '{codigo}' and QntRestante > 0 and Varejista = '{varejista}' order by CONVERT(date, Data, 103) ASC";
             consulta.consultarSimNao();
             txtNF.Text = consulta.qntNaPosicao;
         }
@@ -238,21 +242,23 @@ namespace CRMagazine
         // BAIXAR QNT DA NOTA FISCAL MAIS ANTIGA QUE CONTENHA O CODVAREJO E PRECISE SER BAIXADA A QUANTIDADE
         public void BaixarQntNF()
         {
+            string codigo = consulta.Prevent(txtCodVarejo.Text);
+            string varejista = consulta.Prevent(txtVarejista.Text);
+            string nota = consulta.Prevent(txtNF.Text);
+
             if (txtVarejista.Text == "MULTIVAREJO" || txtVarejista.Text == "LOJAS CEM")
             {
-                NF = txtNF.Text;
+                NF = nota;
             }
             else
             {
-                consulta.comando = "";
-                consulta.comando = "select top(1) notafiscal as Quantidade from NotaFiscal where CodVarejo = '" + txtCodVarejo.Text + "' and QntRestante > 0 and Varejista = '" + txtVarejista.Text + "' order by CONVERT(date, Data, 103) ASC";
+                consulta.comando = $"select top(1) notafiscal as Quantidade from NotaFiscal where CodVarejo = '{codigo}' and QntRestante > 0 and Varejista = '{varejista}' order by CONVERT(date, Data, 103) ASC";
                 consulta.consultarSimNao();
                 NF = consulta.qntNaPosicao;
             }
             
 
-            consulta.comando = "";
-            consulta.comando = "update notafiscal set QntRestante = QntRestante - 1 where notafiscal = '" + NF + "' and CodVarejo = '" + txtCodVarejo.Text + "'";
+            consulta.comando = $"update notafiscal set QntRestante = QntRestante - 1 where notafiscal = '{NF}' and CodVarejo = '{codigo}' and QntRestante > 0 and Varejista = '{varejista}'";
             consulta.Atualizar();
         }
 

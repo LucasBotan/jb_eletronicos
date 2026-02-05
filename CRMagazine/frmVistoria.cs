@@ -250,6 +250,21 @@ namespace CRMagazine
         {
             if (txtOS.Text.Length > 0)
             {
+                //SE ESTIVER MARCADO PARA BUSCAR POR SKU
+                if (chbBuscaPorSKU_entrada.Checked)
+                {
+                    consulta.ConsultarEAN("SKU", txtCodVarejo.Text, cboVarejista.Text);
+                    if (!string.IsNullOrEmpty(consulta.CodVarejo))
+                    {
+                        txtCodVarejo.Text = consulta.CodVarejo;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"SKU NÃO ENCONTRADO PARA O VAREJISTA {cboVarejista.Text}.");
+                        return;
+                    }
+                }
+
                 consulta.ConsultarCodVarejo(txtCodVarejo.Text, cboVarejista.Text);
                 if (consulta.Retorno == "ok")
                 {
