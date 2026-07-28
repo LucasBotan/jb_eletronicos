@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Drawing.Printing;
 
 namespace CRMagazine
 {
@@ -21,6 +22,7 @@ namespace CRMagazine
 
         Conexao cx = new Conexao();
         Consulta consulta = new Consulta();
+        Impressao imprimir = new Impressao();
 
         private void frmReparoLacarProdutoMontado_Load(object sender, EventArgs e)
         {
@@ -103,6 +105,7 @@ namespace CRMagazine
 
                     txtSKU.Text = consulta.SKU;
                     txtEAN.Text = consulta.EANpuri;
+                    txtCodVarejista.Text = consulta.CodVarejo;
                     btnConcluir.Select();
                 }
                 else
@@ -140,23 +143,61 @@ namespace CRMagazine
             else
             {
                 consulta.DataAtual();
-                consulta.comando = "insert into Producao (EAN, Descricao, SKU, Usuario, Data, Hora, Status) Values ";
+                /*consulta.comando = "insert into Producao (EAN, Descricao, SKU, Usuario, Data, Hora, Status) Values ";
                 consulta.comando += " ('" + txtEAN.Text + "', '" + txtDescricao.Text + "', '" + txtSKU.Text + "', '" + cboUsuario.Text + "', ";
                 consulta.comando += " '" + consulta.dataNormal + "', '" + consulta.hora + "', 'AGUARDANDO')";
-                consulta.Atualizar();
-                if (consulta.Retorno == "ok")
-                {
-                    MessageBox.Show("PRODUTO CADASTRADO.");
-                    btnLimpar.PerformClick();
+                consulta.Atualizar();*/
 
-                }
-                else
+                string osGerada = "";
+                int linhasAfetadas= consulta.InserirProdutoMontado(txtEAN.Text, txtDescricao.Text, txtCodVarejista.Text,  txtSKU.Text, cboUsuario.Text, "HIGIENIZACAO", consulta.dataNormal, consulta.hora, out osGerada);
+                if(linhasAfetadas == 0)
                 {
                     MessageBox.Show("ERRO AO INSERIR PRODUTO MONTADO.");
+                    return;
+                }
+
+                if (chbNaoImprimir.Checked == false)
+                {
+                    Imprimir(osGerada);
+                }
+
+                //AVALIAR SE SALVA OU NÃO NO HISTORICO.
+                //string StatusHistorico = "PRODUTO_MONTADO";
+                //consulta.InsereHistorico(osGerada, lblUsuario.Text, StatusHistorico, consulta.dataNormal, consulta.hora);
+
+                MessageBox.Show($"PRODUTO CADASTRADO.\r\n\r\nOS GERADA = {osGerada}");
+                lblUltimaOS.Text = $"ÚLTIMA OS: {osGerada}";
+
+                //MessageBox.Show("PRODUTO CADASTRADO.");
+                btnLimpar.PerformClick();
+
+            }  
+        }
+
+
+        public void Imprimir(string osGerada)
+        {
+            imprimir.EtiquetaProdutoMontado(osGerada, consulta.dataNormal, cboUsuario.Text, txtDescricao.Text, txtSKU.Text);//, DataMais30);
+
+            string codZPL = imprimir.s;
+
+            // SELECIONAR IMPRESSORA OU UTILIZAR A PADRÃO
+            if (chbSelecionarImpressora.Checked)
+            {
+                // Allow the user to select a printer.
+                PrintDialog pd = new PrintDialog();
+                pd.PrinterSettings = new PrinterSettings();
+                if (DialogResult.OK == pd.ShowDialog(this))
+                {
+                    // Send a printer-specific to the printer.
+                    RawPrinterHelper.SendStringToPrinter(pd.PrinterSettings.PrinterName, codZPL);
                 }
             }
-            
-
+            else
+            {
+                string nomeImpressoraPadrao = (new PrinterSettings()).PrinterName;
+                RawPrinterHelper.SendStringToPrinter(nomeImpressoraPadrao, codZPL);
+            }
         }
 
         private void btnLimpar_Click(object sender, EventArgs e)
@@ -164,6 +205,7 @@ namespace CRMagazine
             txtEAN.Text = "";
             txtSKU.Text = "";
             txtDescricao.Text = "";
+            txtCodVarejista.Text = "";
             txtEAN.Select();
             ContadorDeProducao();
         }

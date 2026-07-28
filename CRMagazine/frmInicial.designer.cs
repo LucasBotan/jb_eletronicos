@@ -108,6 +108,7 @@
             this.aLTERAREXCLUIRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sUBIRPLANILHADECÓDIGOSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sAÍDANFPORCÓDIGOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cADASTRARVAREJISTAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnOK = new System.Windows.Forms.Button();
             this.txtSenha = new System.Windows.Forms.TextBox();
             this.txtUsuario = new System.Windows.Forms.TextBox();
@@ -120,7 +121,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pnlSenha = new System.Windows.Forms.Panel();
-            this.cADASTRARVAREJISTAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -284,7 +285,7 @@
             // 
             this.vISTORIAToolStripMenuItem1.Enabled = false;
             this.vISTORIAToolStripMenuItem1.Name = "vISTORIAToolStripMenuItem1";
-            this.vISTORIAToolStripMenuItem1.Size = new System.Drawing.Size(122, 22);
+            this.vISTORIAToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.vISTORIAToolStripMenuItem1.Text = "VISTORIA";
             // 
             // rUNINToolStripMenuItem
@@ -310,7 +311,8 @@
             this.eMBALAGEMToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hIGIENIZAÇÃOToolStripMenuItem,
             this.iMPRESSÃOToolStripMenuItem,
-            this.iMPRIMIREANToolStripMenuItem});
+            this.iMPRIMIREANToolStripMenuItem,
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem});
             this.eMBALAGEMToolStripMenuItem.Enabled = false;
             this.eMBALAGEMToolStripMenuItem.Name = "eMBALAGEMToolStripMenuItem";
             this.eMBALAGEMToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
@@ -320,14 +322,14 @@
             // hIGIENIZAÇÃOToolStripMenuItem
             // 
             this.hIGIENIZAÇÃOToolStripMenuItem.Name = "hIGIENIZAÇÃOToolStripMenuItem";
-            this.hIGIENIZAÇÃOToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.hIGIENIZAÇÃOToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
             this.hIGIENIZAÇÃOToolStripMenuItem.Text = "HIGIENIZAÇÃO";
             this.hIGIENIZAÇÃOToolStripMenuItem.Click += new System.EventHandler(this.hIGIENIZAÇÃOToolStripMenuItem_Click);
             // 
             // iMPRESSÃOToolStripMenuItem
             // 
             this.iMPRESSÃOToolStripMenuItem.Name = "iMPRESSÃOToolStripMenuItem";
-            this.iMPRESSÃOToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.iMPRESSÃOToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
             this.iMPRESSÃOToolStripMenuItem.Text = "IMPRESSÃO";
             this.iMPRESSÃOToolStripMenuItem.Visible = false;
             this.iMPRESSÃOToolStripMenuItem.Click += new System.EventHandler(this.iMPRESSÃOToolStripMenuItem_Click);
@@ -335,7 +337,7 @@
             // iMPRIMIREANToolStripMenuItem
             // 
             this.iMPRIMIREANToolStripMenuItem.Name = "iMPRIMIREANToolStripMenuItem";
-            this.iMPRIMIREANToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.iMPRIMIREANToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
             this.iMPRIMIREANToolStripMenuItem.Text = "IMPRIMIR EAN";
             this.iMPRIMIREANToolStripMenuItem.Click += new System.EventHandler(this.iMPRIMIREANToolStripMenuItem_Click);
             // 
@@ -794,6 +796,13 @@
             this.sAÍDANFPORCÓDIGOToolStripMenuItem.Text = "SAÍDA NF POR CÓDIGO";
             this.sAÍDANFPORCÓDIGOToolStripMenuItem.Click += new System.EventHandler(this.sAÍDANFPORCÓDIGOToolStripMenuItem_Click);
             // 
+            // cADASTRARVAREJISTAToolStripMenuItem
+            // 
+            this.cADASTRARVAREJISTAToolStripMenuItem.Name = "cADASTRARVAREJISTAToolStripMenuItem";
+            this.cADASTRARVAREJISTAToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.cADASTRARVAREJISTAToolStripMenuItem.Text = "CADASTRAR VAREJISTA";
+            this.cADASTRARVAREJISTAToolStripMenuItem.Click += new System.EventHandler(this.cADASTRARVAREJISTAToolStripMenuItem_Click);
+            // 
             // btnOK
             // 
             this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(146)))), ((int)(((byte)(208)))), ((int)(((byte)(80)))));
@@ -923,12 +932,12 @@
             this.pnlSenha.Size = new System.Drawing.Size(237, 137);
             this.pnlSenha.TabIndex = 68;
             // 
-            // cADASTRARVAREJISTAToolStripMenuItem
+            // hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem
             // 
-            this.cADASTRARVAREJISTAToolStripMenuItem.Name = "cADASTRARVAREJISTAToolStripMenuItem";
-            this.cADASTRARVAREJISTAToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-            this.cADASTRARVAREJISTAToolStripMenuItem.Text = "CADASTRAR VAREJISTA";
-            this.cADASTRARVAREJISTAToolStripMenuItem.Click += new System.EventHandler(this.cADASTRARVAREJISTAToolStripMenuItem_Click);
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem.Name = "hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem";
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem.Size = new System.Drawing.Size(273, 22);
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem.Text = "HIGIENIZAÇÃO PRODUTO MONTADO";
+            this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem.Click += new System.EventHandler(this.hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem_Click);
             // 
             // frmInicial
             // 
@@ -1056,5 +1065,6 @@
         private System.Windows.Forms.ToolStripMenuItem cONFERÊNCIAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aLTERARCLASSIFICAÇÃOToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cADASTRARVAREJISTAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem;
     }
 }

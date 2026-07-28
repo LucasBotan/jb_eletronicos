@@ -112,7 +112,7 @@ namespace CRMagazine
             s += "^PQ1,0,1,Y^XZ";*/
         }
 
-        public void EtiquetaEANPuri(string Voltagem, string CodVarejo, string SKU, string EAN, string Descricao)
+        public void EtiquetaEANPuri(string Voltagem, string CodVarejo, string SKU, string EAN, string Descricao, string classificacao)
         {
             s = "";
             s += "^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR3,3^MD07^JUS^LRN^CI0^XZ";
@@ -125,6 +125,11 @@ namespace CRMagazine
             s += "^FO365,40^GB100,110,4^FS";
             s += "^FO0,70^FB850,3,0,C,0^AON,50,15^FD" + Voltagem + "V^FS";
             //s += "^FO0,90^FB800,3,0,C,0^AON,30,15^FDBR/VM^FS";
+
+            if (!string.IsNullOrWhiteSpace(classificacao))
+            {
+                s += $"^FO0,250^FB1450,3,0,C,0^AON,50,15^FD{classificacao}^FS";
+            }
 
             s += "^FO10,45^FB340,3,0,C,0^AON,25,15^FDREFERENCIA^FS";
             s += "^FO70,70^BY2^BCN,90,N,N^FD" + CodVarejo + "^FS";
@@ -143,7 +148,7 @@ namespace CRMagazine
             s += "^PQ1,0,1,Y^XZ";
         }
 
-        public void EtiquetaEANPuriConfig(string Voltagem, string CodVarejo, string SKU, string EAN, string Descricao)
+        public void EtiquetaEANPuriConfig(string Voltagem, string CodVarejo, string SKU, string EAN, string Descricao, string classificacao)
         {
             s = "";
             //s += "^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR3,3^MD12^JUS^LRN^CI0^XZ";
@@ -156,6 +161,11 @@ namespace CRMagazine
             s += "^FO365,40^GB100,110,4^FS";
             s += "^FO0,70^FB850,3,0,C,0^AON,50,15^FD" + Voltagem + "V^FS";
             //s += "^FO0,90^FB800,3,0,C,0^AON,30,15^FDBR/VM^FS";
+
+            if (!string.IsNullOrWhiteSpace(classificacao))
+            {
+                s += $"^FO0,250^FB1450,3,0,C,0^AON,50,15^FD{classificacao}^FS";
+            }
 
             s += "^FO10,45^FB340,3,0,C,0^AON,25,15^FDREFERENCIA^FS";
             s += "^FO70,70^BY2^BCN,90,N,N^FD" + CodVarejo + "^FS";
@@ -211,7 +221,26 @@ namespace CRMagazine
             s += "^FO20,344^FB870,3,2,C,0^FR^AC,50,60^FD" + Classificacao + "^FS";
             s += "^PQ1,0,1,Y^XZ";
         }
-        
+
+
+        public void EtiquetaProdutoMontado(string OS, string Entrada, string tecnico, string modelo, string sku)//, string Mais30)
+        {
+            s = "";
+            s += "^XA~TA000~JSN^LT0^MNW^MTT^PON^PMN^LH0,0^JMA^PR3,3^MD12^JUS^LRN^CI0^XZ";
+            s += "^XA";
+            s += "^MMT";
+            s += "^PW1400";
+            s += "^LL680";
+            s += "^LS0";
+            s += "^SD20";
+            s += $"^BY3,2,80^FT 90,120^BCN,,N,N^FD{OS}^FS";
+            s += $"^FT90,180^A0N,70,80^FH\\^FD{OS}^FS";
+            s += $"^FT100,230^A0N,40,50^FH\\^FDMONTADO: {Entrada}^FS";
+            s += "^FT100,260^A0N,20,20^FH\\^FDTECNICO:^FS";
+            s += $"^FT100,300^A0N,40,50^FH\\^FD{tecnico}^FS";
+            s += $"^FO40,320^FB760,3,0,C,0^AON,25,15^FD{sku}-{modelo}^FS";
+            s += "^PQ1,0,1,Y^XZ";
+        }
 
 
         public void EtiquetaLivre300dpiOLD()

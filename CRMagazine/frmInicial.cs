@@ -554,6 +554,12 @@ namespace CRMagazine
             c.Show();
         }
 
+        private void hIGIENIZAÇÃOPRODUTOMONTADOToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmHigienizacaoProdutoMontado c = new frmHigienizacaoProdutoMontado();
+            c.Show();
+        }
+
 
         /*
         private void tÉCNICAToolStripMenuItem_Click(object sender, EventArgs e)

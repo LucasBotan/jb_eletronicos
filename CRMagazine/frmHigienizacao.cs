@@ -297,11 +297,11 @@ namespace CRMagazine
 
             if (chbConfigImpressora.Checked)
             {
-                imprimir.EtiquetaEANPuriConfig(Voltagem, txtCodVarejo.Text, txtCodPositivo.Text, txtEAN.Text, txtDescricao.Text);
+                imprimir.EtiquetaEANPuriConfig(Voltagem, txtCodVarejo.Text, txtCodPositivo.Text, txtEAN.Text, txtDescricao.Text, "");
             }
             else
             {
-                imprimir.EtiquetaEANPuri(Voltagem, txtCodVarejo.Text, txtCodPositivo.Text, txtEAN.Text, txtDescricao.Text);
+                imprimir.EtiquetaEANPuri(Voltagem, txtCodVarejo.Text, txtCodPositivo.Text, txtEAN.Text, txtDescricao.Text,"");
             }
 
             string codZPL = imprimir.s;

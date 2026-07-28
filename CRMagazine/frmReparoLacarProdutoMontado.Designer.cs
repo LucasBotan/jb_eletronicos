@@ -41,6 +41,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.txtCodVarejista = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cboTipoBusca = new System.Windows.Forms.Label();
             this.cboVarejista = new System.Windows.Forms.ComboBox();
@@ -57,10 +59,15 @@
             this.cboUsuario = new System.Windows.Forms.ComboBox();
             this.lblEspecie = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.chbNaoImprimir = new System.Windows.Forms.CheckBox();
+            this.chbSelecionarImpressora = new System.Windows.Forms.CheckBox();
+            this.lblUltimaOS = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel6
@@ -181,6 +188,8 @@
             // panel11
             // 
             this.panel11.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panel11.Controls.Add(this.txtCodVarejista);
+            this.panel11.Controls.Add(this.label2);
             this.panel11.Controls.Add(this.label4);
             this.panel11.Controls.Add(this.cboTipoBusca);
             this.panel11.Controls.Add(this.cboVarejista);
@@ -196,8 +205,29 @@
             this.panel11.Controls.Add(this.lblTipoBusca);
             this.panel11.Location = new System.Drawing.Point(31, 249);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(681, 239);
+            this.panel11.Size = new System.Drawing.Size(681, 223);
             this.panel11.TabIndex = 476;
+            // 
+            // txtCodVarejista
+            // 
+            this.txtCodVarejista.BackColor = System.Drawing.Color.GhostWhite;
+            this.txtCodVarejista.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCodVarejista.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtCodVarejista.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCodVarejista.Location = new System.Drawing.Point(499, 82);
+            this.txtCodVarejista.Name = "txtCodVarejista";
+            this.txtCodVarejista.Size = new System.Drawing.Size(172, 29);
+            this.txtCodVarejista.TabIndex = 504;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(496, 64);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(124, 18);
+            this.label2.TabIndex = 505;
+            this.label2.Text = "COD VAREJISTA";
             // 
             // label4
             // 
@@ -243,7 +273,7 @@
             this.btnLimpar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLimpar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimpar.ForeColor = System.Drawing.SystemColors.Info;
-            this.btnLimpar.Location = new System.Drawing.Point(24, 198);
+            this.btnLimpar.Location = new System.Drawing.Point(24, 189);
             this.btnLimpar.Name = "btnLimpar";
             this.btnLimpar.Size = new System.Drawing.Size(81, 29);
             this.btnLimpar.TabIndex = 468;
@@ -325,7 +355,7 @@
             this.btnConcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConcluir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConcluir.ForeColor = System.Drawing.SystemColors.Info;
-            this.btnConcluir.Location = new System.Drawing.Point(565, 189);
+            this.btnConcluir.Location = new System.Drawing.Point(565, 180);
             this.btnConcluir.Name = "btnConcluir";
             this.btnConcluir.Size = new System.Drawing.Size(106, 38);
             this.btnConcluir.TabIndex = 462;
@@ -384,12 +414,57 @@
             this.pictureBox1.TabIndex = 470;
             this.pictureBox1.TabStop = false;
             // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.panel3.Controls.Add(this.chbNaoImprimir);
+            this.panel3.Controls.Add(this.chbSelecionarImpressora);
+            this.panel3.Location = new System.Drawing.Point(555, 201);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(157, 42);
+            this.panel3.TabIndex = 506;
+            // 
+            // chbNaoImprimir
+            // 
+            this.chbNaoImprimir.AutoSize = true;
+            this.chbNaoImprimir.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbNaoImprimir.Location = new System.Drawing.Point(3, 21);
+            this.chbNaoImprimir.Name = "chbNaoImprimir";
+            this.chbNaoImprimir.Size = new System.Drawing.Size(94, 16);
+            this.chbNaoImprimir.TabIndex = 487;
+            this.chbNaoImprimir.Text = "NÃO IMPRIMIR";
+            this.chbNaoImprimir.UseVisualStyleBackColor = true;
+            // 
+            // chbSelecionarImpressora
+            // 
+            this.chbSelecionarImpressora.AutoSize = true;
+            this.chbSelecionarImpressora.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chbSelecionarImpressora.Location = new System.Drawing.Point(3, 3);
+            this.chbSelecionarImpressora.Name = "chbSelecionarImpressora";
+            this.chbSelecionarImpressora.Size = new System.Drawing.Size(151, 16);
+            this.chbSelecionarImpressora.TabIndex = 475;
+            this.chbSelecionarImpressora.Text = "SELECIONAR IMPRESSORA";
+            this.chbSelecionarImpressora.UseVisualStyleBackColor = true;
+            // 
+            // lblUltimaOS
+            // 
+            this.lblUltimaOS.AutoSize = true;
+            this.lblUltimaOS.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUltimaOS.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblUltimaOS.Location = new System.Drawing.Point(28, 475);
+            this.lblUltimaOS.Name = "lblUltimaOS";
+            this.lblUltimaOS.Size = new System.Drawing.Size(101, 18);
+            this.lblUltimaOS.TabIndex = 506;
+            this.lblUltimaOS.Text = "ÚLTIMA OS:";
+            // 
             // frmReparoLacarProdutoMontado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(739, 500);
+            this.Controls.Add(this.lblUltimaOS);
             this.Controls.Add(this.panel6);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel11);
@@ -408,6 +483,8 @@
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -443,5 +520,11 @@
         private System.Windows.Forms.ComboBox cboBusca;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cboVarejista;
+        private System.Windows.Forms.TextBox txtCodVarejista;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox chbNaoImprimir;
+        private System.Windows.Forms.CheckBox chbSelecionarImpressora;
+        private System.Windows.Forms.Label lblUltimaOS;
     }
 }

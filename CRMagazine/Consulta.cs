@@ -1067,6 +1067,155 @@ namespace CRMagazine
         }
 
 
+        public int InserirProdutoMontado(
+    string EAN,
+    string descricao,
+    string codigoVarejista,
+    string SKU,
+    string usuario,
+    string status,
+    string dataNormal,
+    string hora,
+    out string osGerada)
+        {
+            osGerada = "";
+            Retorno = "";
+            string sql = "";
+            int linhasAfetadas = 0;
+            int id = 0;
+
+            try
+            {
+                sql += $"IF NOT EXISTS (select * from Producao where OS = (select 'PM' + convert(varchar(15),(MAX(idProducao)+1)) from Producao)) BEGIN ";
+                sql += $"insert into Producao (OS, EAN, CodVarejista, Descricao, SKU, Usuario, Data, Hora, Status) ";
+                sql += $"(";
+                sql += $"select 'PM' + convert(varchar(15),(MAX(idProducao)+1)), ";
+                sql += $"'{Prevent(EAN)}', ";
+                sql += $"'{Prevent(codigoVarejista)}', ";
+                sql += $"'{Prevent(descricao)}', ";
+                sql += $"'{Prevent(SKU)}', ";
+                sql += $"'{Prevent(usuario)}', ";
+                sql += $"'{Prevent(dataNormal)}', ";
+                sql += $"'{Prevent(hora)}', ";
+                sql += $"'{status}' ";
+                sql += $" from Producao) END";
+
+                cx.Conectar();
+
+                SqlCommand cd = new SqlCommand();
+                cd.Connection = cx.c;
+                cd.CommandText = sql;
+
+                linhasAfetadas = cd.ExecuteNonQuery();
+
+                cd.CommandText = "SELECT SCOPE_IDENTITY()";
+                id = Convert.ToInt32(cd.ExecuteScalar());
+
+                // OS GERADA PARA INSERIR NO HISTÓRICO
+                osGerada = "PM" + id;
+
+                Retorno = "ok";
+
+                return linhasAfetadas;
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show("ERRO AO INSERIR NO BANCO PRODUTOS MONTADOS:\n" + x.Message);
+                Retorno = "falha";
+
+                return 0;
+            }
+            finally
+            {
+                cx.Desconectar();
+            }
+        }
+
+
+        public string idProducao = "";
+        public string OS_produtoMontado = "";
+        public string EAN_produtoMontado = "";
+        public string Descricao_produtoMontado = "";
+        public string SKU_produtoMontado = "";
+        public string status_produtoMontado = "";
+        public string classificacao_produtoMontado = "";
+        public string tecnico_produtoMontado = "";
+        public string codVarejista_produtoMontado = "";
+        public bool ConsultaProdutoMontado(string coluna, string valorDesejado, bool somenteAtivo)
+        {
+            try
+            {
+                string sql =
+                    @"SELECT
+                idProducao,
+                OS,
+                EAN,
+                CodVarejista,
+                Descricao,
+                Status,
+                SKU,
+                Usuario,
+                Classificacao
+            FROM Producao
+            WHERE " + coluna + " = @valor";
+
+                if (somenteAtivo)
+                    sql += " AND Status <> 'FINALIZADO'";
+
+                cx.Conectar();
+
+                using (SqlCommand cd = new SqlCommand(sql, cx.c))
+                {
+                    cd.Parameters.AddWithValue("@valor", valorDesejado);
+
+                    using (SqlDataReader dr = cd.ExecuteReader())
+                    {
+                        if (!dr.Read())
+                        {
+                            LimparProdutoMontado();
+                            return false;
+                        }
+
+                        idProducao = dr["idProducao"].ToString();
+                        OS_produtoMontado = dr["OS"].ToString();
+                        EAN_produtoMontado = dr["EAN"].ToString();
+                        Descricao_produtoMontado = dr["Descricao"].ToString();
+                        SKU_produtoMontado = dr["SKU"].ToString();
+                        status_produtoMontado = dr["Status"].ToString();
+                        classificacao_produtoMontado = dr["Classificacao"].ToString();
+                        tecnico_produtoMontado = dr["Usuario"].ToString();
+                        codVarejista_produtoMontado = dr["CodVarejista"].ToString();
+
+                        return true;
+                    }
+                }
+            }
+            catch (SqlException x)
+            {
+                MessageBox.Show("Falha na consulta da tabela Produção:\n" + x.Message);
+                LimparProdutoMontado();
+                return false;
+            }
+            finally
+            {
+                cx.Desconectar();
+            }
+        }
+
+
+        private void LimparProdutoMontado()
+        {
+            idProducao = "";
+            OS_produtoMontado = "";
+            EAN_produtoMontado = "";
+            Descricao_produtoMontado = "";
+            SKU_produtoMontado = "";
+            status_produtoMontado = "";
+            classificacao_produtoMontado = "";
+            tecnico_produtoMontado = "";
+            codVarejista_produtoMontado = "";
+        }
+
         public void InsereNoBancoDATA(
            string NS, string Descricao, string Tipo, string SKU, string NF, string DtFatura, string Meses, string Orcamento,
            DateTime DtCompra, DateTime DtTroca, string DiasTroca, string DiasVistoria, string DefeitoRelatado, string Filial, string ObsDocumento,
@@ -1115,6 +1264,7 @@ namespace CRMagazine
         public string dataParaArquivo = "";
         public string dataInvertida = "";
         public string dataInvertidaComtraço = "";
+        public string dataHora = "";
 
         public void DataAtual()
         {
@@ -1156,6 +1306,7 @@ namespace CRMagazine
            // data = agora.ToString("dd/MM/yyyy");
             dataCompleta = agora.ToString();
             hora = agora.ToString("HH:mm");
+            dataHora = agora.ToString("dd/MM/yyyy HH:mm");
         }
 
         public int cont;

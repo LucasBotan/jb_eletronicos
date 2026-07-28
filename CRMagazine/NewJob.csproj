@@ -285,6 +285,12 @@
     <Compile Include="frmExpedicaoPlanilhaNotaFiscal.designer.cs">
       <DependentUpon>frmExpedicaoPlanilhaNotaFiscal.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmHigienizacaoProdutoMontado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmHigienizacaoProdutoMontado.Designer.cs">
+      <DependentUpon>frmHigienizacaoProdutoMontado.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmHostgator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -565,6 +571,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmExpedicaoPlanilhaNotaFiscal.resx">
       <DependentUpon>frmExpedicaoPlanilhaNotaFiscal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHigienizacaoProdutoMontado.resx">
+      <DependentUpon>frmHigienizacaoProdutoMontado.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmHostgator.resx">
       <DependentUpon>frmHostgator.cs</DependentUpon>
